@@ -33,6 +33,12 @@ public class Repertory {
 		session.close();
 	}
 	
+	public static void rollbackTransaction(){
+		Session session = sessions.get();
+		session.getTransaction().rollback();
+		session.close();
+	}
+	
 	public static  void close(){
 		factory.close();
 	}
