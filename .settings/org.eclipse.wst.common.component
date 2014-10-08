@@ -2,6 +2,7 @@
     <wb-module deploy-name="tinyWeb">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/sample"/>
         <property name="context-root" value="tinyWeb"/>
         <property name="java-output-path" value="/tinyWeb/build/classes"/>
     </wb-module>
