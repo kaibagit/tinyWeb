@@ -30,10 +30,5 @@ public class Article extends Model{
 		createAt = now;
 		updateAt = now;
 	}
-
-	
-	public static Article get(Long id){
-		return (Article) Repertory.db().get(Article.class, id);
-	}
 	
 }

@@ -32,10 +32,6 @@ public class Member extends Model{
 		createAt = now;
 		updateAt = now;
 	}
-	
-	public static Member get(Long id){
-		return (Member) Repertory.db().get(Member.class, id);
-	}
 
 	public void publish(Article article){
 		article.author = this;

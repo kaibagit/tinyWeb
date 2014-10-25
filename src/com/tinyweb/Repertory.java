@@ -1,5 +1,9 @@
 package com.tinyweb;
 
+import java.io.Serializable;
+import java.util.List;
+
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
@@ -18,6 +22,28 @@ public class Repertory {
 	
 	public static Session db(){
 		return sessions.get();
+	}
+	
+	/**
+	 * 根据主键获取对象
+	 * @param clazz
+	 * @param id
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T find(Class<T> clazz,Serializable id){
+		return (T) db().get(clazz, id);
+	}
+	
+	/**
+	 * 获取所有对象
+	 * @param clazz
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> List<T> all(Class<T> clazz){
+		Query query = db().createQuery("from ".concat(clazz.getName()));
+		return query.list();
 	}
 	
 	public static void beginTransaction(){

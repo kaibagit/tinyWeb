@@ -21,7 +21,7 @@ public class Main {
 		
 		Repertory.beginTransaction();
 		
-		Member m2 = Member.get(m.id);
+		Member m2 = Repertory.find(Member.class,m.id);
 		System.out.println(m2.name);
 		System.out.println(m2.articles.get(0).title);
 		
