@@ -1,15 +1,15 @@
 package com.tinyweb.mvc;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.GenericServlet;
 import javax.servlet.ServletConfig;
@@ -19,12 +19,13 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.tinyweb.RenderType;
+import com.tinyweb.Application;
 import com.tinyweb.RequestContext;
+import com.tinyweb.mvc.render.HtmlRenderer;
+import com.tinyweb.mvc.render.JsonRenderer;
+import com.tinyweb.mvc.render.RenderType;
 import com.tinyweb.utils.StringUtils;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 public class Dispatcher extends GenericServlet{
@@ -35,8 +36,6 @@ public class Dispatcher extends GenericServlet{
 	
 	private ServletConfig config;
 	
-	private String viewsPath = "views";
-	
 	public void init(ServletConfig config) throws ServletException{
 		//创建Controller并与url对应
 			//找出所有class
@@ -45,8 +44,10 @@ public class Dispatcher extends GenericServlet{
 		this.config = config;
 		String customViewsPath = config.getInitParameter("viewsPath");
 		if(StringUtils.isNotBlank(customViewsPath)){
-			this.viewsPath = customViewsPath;
+			HtmlRenderer.setViewsPath(customViewsPath);
 		}
+		
+		Application.setRootRealPath(this.getServletConfig().getServletContext().getRealPath("/"));
 		
 		String classPath = this.getClass().getResource("/").getPath();
 		String scanPackage = config.getInitParameter("scanPackage");
@@ -98,7 +99,17 @@ public class Dispatcher extends GenericServlet{
 		HttpServletResponse response = (HttpServletResponse) res;
 		
 		String requestUri = request.getServletPath();
-		//去掉后缀
+		
+		String uriSuffix = getUriSuffix(requestUri);
+		if(".json".equalsIgnoreCase(uriSuffix)){
+			RequestContext.setRenderType(RenderType.Json);
+		}else if(".xml".equalsIgnoreCase(uriSuffix)){
+			RequestContext.setRenderType(RenderType.Xml);
+		}else{
+			RequestContext.setRenderType(RenderType.Html);
+		}
+		
+		//去掉URI后缀
 		int dotIndex = requestUri.lastIndexOf(".");
 		if(dotIndex > 0){
 			requestUri = requestUri.substring(0, dotIndex);
@@ -121,6 +132,25 @@ public class Dispatcher extends GenericServlet{
 	}
 	
 	/**
+	 * 获取URI的后缀
+	 * @param uri
+	 * @return
+	 */
+	private String getUriSuffix(String uri){
+		String lastGroup = null;
+		
+		Pattern p = Pattern.compile("\\.\\w+");
+		Matcher m = p.matcher(uri);
+		
+		boolean result = m.find();
+		while (result) {
+			lastGroup = m.group();
+			result = m.find();
+		}
+		return lastGroup;
+	}
+	
+	/**
 	 * 渲染
 	 * @throws IOException 
 	 * @throws TemplateException 
@@ -128,45 +158,10 @@ public class Dispatcher extends GenericServlet{
 	private void render(String requestUri,HttpServletResponse response) throws IOException{
 		RenderType renderType = RequestContext.getRenderType();
 		if(renderType == RenderType.Html){
-			Configuration cfg = new Configuration();  
-			cfg.setDirectoryForTemplateLoading(
-					new File( 
-							getRootRealPath(viewsPath)
-					)
-			); 
-			Template template = cfg.getTemplate(requestUri+".ftl","utf-8");
-			try {
-				StringWriter stringWriter = new StringWriter();
-				BufferedWriter writer = new BufferedWriter(stringWriter); 
-				template.process(RequestContext.getAtttMap(),writer);
-				response.getWriter().println(stringWriter.toString());
-				response.getWriter().close();
-			} catch (TemplateException e) {
-				throw new IOException(e);
-			}
+			new HtmlRenderer().render(RequestContext.getAtttMap(), requestUri, response);
+		}else if(renderType == RenderType.Json){
+			new JsonRenderer().render(RequestContext.getAtttMap(), requestUri, response);
 		}
-	}
-	
-	/**
-	 * 获得根目录的绝对路径
-	 * @return
-	 */
-	private String getRootRealPath(){
-		return this.getServletConfig().getServletContext().getRealPath("/");
-	}
-	
-	/**
-	 * 根据文件对根目录的相对路径，得到绝对路径
-	 * @param relativePath
-	 * @return
-	 */
-	private String getRootRealPath(String relativePath){
-		StringBuilder rootRealPath = new StringBuilder(getRootRealPath());
-		if(!relativePath.startsWith("/") && !relativePath.startsWith("\\")){
-			rootRealPath.append(File.separatorChar);
-		}
-		rootRealPath.append(relativePath);
-		return rootRealPath.toString();
 	}
 	
 }

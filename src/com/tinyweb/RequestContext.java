@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.tinyweb.mvc.render.RenderType;
+
 public class RequestContext {
 	
 	private static ThreadLocal<HttpServletRequest> requests = new ThreadLocal<HttpServletRequest>();

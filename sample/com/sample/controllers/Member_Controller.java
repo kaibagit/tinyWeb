@@ -11,12 +11,12 @@ public class Member_Controller extends Controller{
 	public void index(){
 		List<Member> members = Repertory.all(Member.class);
 		addAttr("members", members);
+		renderHtml();
 	}
 	
 	public void show(){
 		Long id = paramToLong("id");
 		Member member = Repertory.find(Member.class, id);
 		addAttr("member",member);
-		renderHtml();
 	}
 }

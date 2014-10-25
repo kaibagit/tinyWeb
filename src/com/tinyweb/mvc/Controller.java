@@ -2,8 +2,8 @@ package com.tinyweb.mvc;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.tinyweb.RenderType;
 import com.tinyweb.RequestContext;
+import com.tinyweb.mvc.render.RenderType;
 
 public abstract class Controller {
 	//自动在classpath下找到继承Controller的类

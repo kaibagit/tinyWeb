@@ -1,4 +1,4 @@
-package com.tinyweb;
+package com.tinyweb.mvc.render;
 
 /**
  * 渲染类型
