@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.tinyweb.RenderType;
 import com.tinyweb.RequestContext;
+import com.tinyweb.utils.StringUtils;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -32,12 +33,20 @@ public class Dispatcher extends GenericServlet{
 	
 	private Map<String,ActionDefinition> actionMap = new HashMap<String,ActionDefinition>();
 	
+	private ServletConfig config;
+	
+	private String viewsPath = "views";
+	
 	public void init(ServletConfig config) throws ServletException{
 		//创建Controller并与url对应
 			//找出所有class
 			//找出所有继承自Controller类的java类
 			//根据路径名生成路径与java对象绑定
-		
+		this.config = config;
+		String customViewsPath = config.getInitParameter("viewsPath");
+		if(StringUtils.isNotBlank(customViewsPath)){
+			this.viewsPath = customViewsPath;
+		}
 		
 		String classPath = this.getClass().getResource("/").getPath();
 		String scanPackage = config.getInitParameter("scanPackage");
@@ -76,6 +85,10 @@ public class Dispatcher extends GenericServlet{
 				e.printStackTrace();
 			}
 		 }
+	}
+	
+	public ServletConfig getServletConfig(){
+		return this.config;
 	}
 
 	@Override
@@ -116,7 +129,11 @@ public class Dispatcher extends GenericServlet{
 		RenderType renderType = RequestContext.getRenderType();
 		if(renderType == RenderType.Html){
 			Configuration cfg = new Configuration();  
-			cfg.setDirectoryForTemplateLoading(new File("/home/kaiba/workspace/tinyWeb/WebContent/views"));  
+			cfg.setDirectoryForTemplateLoading(
+					new File( 
+							getRootRealPath(viewsPath)
+					)
+			); 
 			Template template = cfg.getTemplate(requestUri+".ftl","utf-8");
 			try {
 				StringWriter stringWriter = new StringWriter();
@@ -128,6 +145,28 @@ public class Dispatcher extends GenericServlet{
 				throw new IOException(e);
 			}
 		}
+	}
+	
+	/**
+	 * 获得根目录的绝对路径
+	 * @return
+	 */
+	private String getRootRealPath(){
+		return this.getServletConfig().getServletContext().getRealPath("/");
+	}
+	
+	/**
+	 * 根据文件对根目录的相对路径，得到绝对路径
+	 * @param relativePath
+	 * @return
+	 */
+	private String getRootRealPath(String relativePath){
+		StringBuilder rootRealPath = new StringBuilder(getRootRealPath());
+		if(!relativePath.startsWith("/") && !relativePath.startsWith("\\")){
+			rootRealPath.append(File.separatorChar);
+		}
+		rootRealPath.append(relativePath);
+		return rootRealPath.toString();
 	}
 	
 }

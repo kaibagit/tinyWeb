@@ -29,6 +29,10 @@
 			<param-name>scanPackage</param-name>
 			<param-value>com.sample.controllers</param-value>
 		</init-param>
+		<init-param>
+			<param-name>viewsPath</param-name>
+			<param-value>views</param-value>
+		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
