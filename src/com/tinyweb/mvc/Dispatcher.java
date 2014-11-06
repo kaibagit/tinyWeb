@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.tinyweb.Application;
-import com.tinyweb.RequestContext;
+import com.tinyweb.WebContext;
 import com.tinyweb.mvc.render.HtmlRenderer;
 import com.tinyweb.mvc.render.JsonRenderer;
 import com.tinyweb.mvc.render.RenderType;
@@ -46,8 +46,6 @@ public class Dispatcher extends GenericServlet{
 		if(StringUtils.isNotBlank(customViewsPath)){
 			HtmlRenderer.setViewsPath(customViewsPath);
 		}
-		
-		Application.setRootRealPath(this.getServletConfig().getServletContext().getRealPath("/"));
 		
 		String classPath = this.getClass().getResource("/").getPath();
 		String scanPackage = config.getInitParameter("scanPackage");
@@ -98,15 +96,18 @@ public class Dispatcher extends GenericServlet{
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
 		
+		WebContext.putRequest(request );
+		WebContext.putResponse(response);
+		
 		String requestUri = request.getServletPath();
 		
 		String uriSuffix = getUriSuffix(requestUri);
 		if(".json".equalsIgnoreCase(uriSuffix)){
-			RequestContext.setRenderType(RenderType.Json);
+			WebContext.setRenderType(RenderType.Json);
 		}else if(".xml".equalsIgnoreCase(uriSuffix)){
-			RequestContext.setRenderType(RenderType.Xml);
+			WebContext.setRenderType(RenderType.Xml);
 		}else{
-			RequestContext.setRenderType(RenderType.Html);
+			WebContext.setRenderType(RenderType.Html);
 		}
 		
 		//去掉URI后缀
@@ -156,11 +157,11 @@ public class Dispatcher extends GenericServlet{
 	 * @throws TemplateException 
 	 */
 	private void render(String requestUri,HttpServletResponse response) throws IOException{
-		RenderType renderType = RequestContext.getRenderType();
+		RenderType renderType = WebContext.getRenderType();
 		if(renderType == RenderType.Html){
-			new HtmlRenderer().render(RequestContext.getAtttMap(), requestUri, response);
+			new HtmlRenderer().render(WebContext.getAtttMap(), requestUri, response);
 		}else if(renderType == RenderType.Json){
-			new JsonRenderer().render(RequestContext.getAtttMap(), requestUri, response);
+			new JsonRenderer().render(WebContext.getAtttMap(), requestUri, response);
 		}
 	}
 	

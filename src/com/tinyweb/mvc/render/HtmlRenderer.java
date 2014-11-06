@@ -8,14 +8,19 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.tinyweb.Application;
-import com.tinyweb.RequestContext;
+import com.tinyweb.WebContext;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 public class HtmlRenderer implements Renderer{
+	
+	private static Logger logger = LoggerFactory.getLogger(HtmlRenderer.class);
 	
 	private static String viewsPath = "views";
 
@@ -31,15 +36,26 @@ public class HtmlRenderer implements Renderer{
 						Application.getRootRealPath(viewsPath)
 				)
 		); 
-		Template template = cfg.getTemplate(viewName+".ftl","utf-8");
-		try {
-			StringWriter stringWriter = new StringWriter();
-			BufferedWriter writer = new BufferedWriter(stringWriter); 
-			template.process(RequestContext.getAtttMap(),writer);
-			response.getWriter().println(stringWriter.toString());
-			response.getWriter().close();
-		} catch (TemplateException e) {
-			throw new IOException(e);
+		
+		Template template = null;
+		
+		try{
+			 template = cfg.getTemplate(viewName+".ftl",Application.getEncoding());
+		}catch(IOException e){
+			logger.info("template {} not exist", viewName,e);
+		}
+		
+		if(template != null ){
+			try {
+				StringWriter stringWriter = new StringWriter();
+				BufferedWriter writer = new BufferedWriter(stringWriter); 
+				template.process(WebContext.getAtttMap(),writer);
+				response.setCharacterEncoding(Application.getEncoding());
+				response.getWriter().println(stringWriter.toString());
+				response.getWriter().close();
+			} catch (TemplateException e) {
+				throw new IOException(e);
+			}
 		}
 	}
 

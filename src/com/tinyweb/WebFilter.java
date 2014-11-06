@@ -20,13 +20,12 @@ public class WebFilter implements Filter{
 	@Override
 	public void destroy() {
 		Repertory.close();
-		logger.info("==========TransactionFilter destroy==========");
+		logger.info("==========WebFilter destroy==========");
 	}
 
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse res,
 			FilterChain chain) throws IOException, ServletException {
-		RequestContext.put( (HttpServletRequest)req );
 		
 		boolean needRollback = false;
 		Repertory.beginTransaction();
@@ -46,7 +45,7 @@ public class WebFilter implements Filter{
 
 	@Override
 	public void init(FilterConfig config) throws ServletException {
-		logger.info("==========TransactionFilter init==========");
+		logger.info("==========WebFilter init==========");
 	}
 
 }

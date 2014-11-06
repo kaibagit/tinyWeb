@@ -1,8 +1,14 @@
 package com.tinyweb.mvc;
 
-import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
-import com.tinyweb.RequestContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.tinyweb.WebContext;
 import com.tinyweb.mvc.render.RenderType;
 
 public abstract class Controller {
@@ -10,13 +16,15 @@ public abstract class Controller {
 	//自动根据类名和方法吗映射成url
 	//也可以根据注解映射
 	
+	private static Logger logger = LoggerFactory.getLogger(Controller.class);
+	
 	/**
 	 * 获取参数
 	 * @param paramName
 	 * @return
 	 */
 	public String param(String paramName){
-		HttpServletRequest request = RequestContext.get();
+		HttpServletRequest request = WebContext.getRequest();
 		return request.getParameter(paramName);
 	}
 	
@@ -91,7 +99,7 @@ public abstract class Controller {
 	 * @param attrValue
 	 */
 	public void addAttr(String attrName,Object attrValue){
-		RequestContext.addAttr(attrName, attrValue);
+		WebContext.addAttr(attrName, attrValue);
 	}
 	
 	public void render(){
@@ -99,26 +107,39 @@ public abstract class Controller {
 	}
 	
 	public void renderText(){
-		RequestContext.setRenderType(RenderType.Text);
+		WebContext.setRenderType(RenderType.Text);
 	}
 	
 	public void renderHtml(){
-		RequestContext.setRenderType(RenderType.Html);
+		WebContext.setRenderType(RenderType.Html);
 	}
 	
 	public void renderJson(){
-		RequestContext.setRenderType(RenderType.Json);
+		WebContext.setRenderType(RenderType.Json);
 	}
 	
 	public void renderJson(Object data){
-		RequestContext.setRenderType(RenderType.Json);
+		WebContext.setRenderType(RenderType.Json);
 	}
 	
 	public void renderXml(){
-		RequestContext.setRenderType(RenderType.Xml);
+		WebContext.setRenderType(RenderType.Xml);
 	}
 	
 	public void renderXml(Object data){
-		RequestContext.setRenderType(RenderType.Xml);
+		WebContext.setRenderType(RenderType.Xml);
+	}
+	
+	/**
+	 * 重定向
+	 * @param redirectPath
+	 */
+	public void redirectTo(String redirectPath){
+		HttpServletResponse response = WebContext.getResponse();
+		try {
+			response.sendRedirect(redirectPath);
+		} catch (IOException e) {
+			logger.error("There is a error when redirecting", e);
+		}
 	}
 }

@@ -32,6 +32,10 @@ public class Member extends Model{
 		createAt = now;
 		updateAt = now;
 	}
+	
+	public static Member find(Long id){
+		return Repertory.find(Member.class, id);
+	}
 
 	public void publish(Article article){
 		article.author = this;
@@ -40,7 +44,7 @@ public class Member extends Model{
 	
 	public void deleteArticle(Article article){
 		if(this.id.equals(article.author.id)){
-			article.remove();
+			article.destroy();
 		}else{
 			throw new RuntimeException("Only the author can delete zhe article.");
 		}

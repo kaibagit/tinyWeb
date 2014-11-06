@@ -7,7 +7,11 @@ public abstract class Model {
 		Repertory.db().save(this);
 	}
 	
-	public void remove(){
+	public void update(){
+		Repertory.db().flush();
+	}
+	
+	public void destroy(){
 		Repertory.db().delete(this);
 	}
 }

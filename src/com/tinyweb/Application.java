@@ -4,6 +4,7 @@ import java.io.File;
 
 public class Application {
 	private static String rootRealPath;
+	private static String encoding;
 	
 	public static synchronized void setRootRealPath(String rootRealPath){
 		if(Application.rootRealPath != null){
@@ -12,12 +13,27 @@ public class Application {
 		Application.rootRealPath = rootRealPath;
 	}
 	
+	public static synchronized void setEncoding(String encoding){
+		if(Application.encoding != null){
+			throw new RuntimeException("应用的字符编码已经被设置过，不能重复设置");
+		}
+		Application.encoding = encoding;
+	}
+	
 	/**
 	 * 获得根目录的绝对路径
 	 * @return
 	 */
 	public static String getRootRealPath(){
 		return rootRealPath;
+	}
+	
+	/**
+	 * 获取应用编码
+	 * @return
+	 */
+	public static String getEncoding(){
+		return encoding;
 	}
 	
 	/**
