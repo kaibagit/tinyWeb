@@ -19,7 +19,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.tinyweb.Application;
 import com.tinyweb.WebContext;
 import com.tinyweb.mvc.render.HtmlRenderer;
 import com.tinyweb.mvc.render.JsonRenderer;
@@ -120,7 +119,7 @@ public class Dispatcher extends GenericServlet{
 		
 		try {
 			actionDefinition.getActionMethod().invoke(actionDefinition.getControllerClass().newInstance(), null);
-			render(requestUri,response);
+			render(requestUri,request,response);
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
@@ -156,12 +155,12 @@ public class Dispatcher extends GenericServlet{
 	 * @throws IOException 
 	 * @throws TemplateException 
 	 */
-	private void render(String requestUri,HttpServletResponse response) throws IOException{
+	private void render(String requestUri,HttpServletRequest request,HttpServletResponse response) throws IOException{
 		RenderType renderType = WebContext.getRenderType();
 		if(renderType == RenderType.Html){
-			new HtmlRenderer().render(WebContext.getAtttMap(), requestUri, response);
+			new HtmlRenderer().render(WebContext.getAtttMap(), requestUri, request,response);
 		}else if(renderType == RenderType.Json){
-			new JsonRenderer().render(WebContext.getAtttMap(), requestUri, response);
+			new JsonRenderer().render(WebContext.getAtttMap(), requestUri, request,response);
 		}
 	}
 	

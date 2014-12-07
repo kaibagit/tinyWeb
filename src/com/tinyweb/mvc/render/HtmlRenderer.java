@@ -31,18 +31,18 @@ public class HtmlRenderer implements Renderer{
 	}
 
 	@Override
-	public void render(Map<String,Object> data,String viewName,HttpServletResponse response) throws IOException {
+	public void render(Map<String,Object> data,String viewName,
+			HttpServletRequest request,HttpServletResponse response) throws IOException {
 		File freemarkerViewFile = new File(Application.getRootRealPath(viewsPath+"/"+viewName+".ftl"));
 		if(freemarkerViewFile.exists()){
 			renderByFreemarker(data,viewName,response);
 		}else{
-			renderByJsp(data,viewName,response);
+			renderByJsp(data,viewName,request,response);
 		}
 	}
 	
-	private void renderByJsp(Map<String,Object> data,String viewName,HttpServletResponse response) throws IOException{
+	private void renderByJsp(Map<String,Object> data,String viewName,HttpServletRequest request,HttpServletResponse response) throws IOException{
 		try {
-			HttpServletRequest request = WebContext.getRequest();
 			for(Map.Entry<String, Object> cell:data.entrySet()){
 				request.setAttribute(cell.getKey(), cell.getValue());
 			}
