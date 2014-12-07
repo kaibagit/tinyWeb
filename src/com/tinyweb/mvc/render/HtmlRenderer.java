@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Map;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -30,6 +32,27 @@ public class HtmlRenderer implements Renderer{
 
 	@Override
 	public void render(Map<String,Object> data,String viewName,HttpServletResponse response) throws IOException {
+		File freemarkerViewFile = new File(Application.getRootRealPath(viewsPath+"/"+viewName+".ftl"));
+		if(freemarkerViewFile.exists()){
+			renderByFreemarker(data,viewName,response);
+		}else{
+			renderByJsp(data,viewName,response);
+		}
+	}
+	
+	private void renderByJsp(Map<String,Object> data,String viewName,HttpServletResponse response) throws IOException{
+		try {
+			HttpServletRequest request = WebContext.getRequest();
+			for(Map.Entry<String, Object> cell:data.entrySet()){
+				request.setAttribute(cell.getKey(), cell.getValue());
+			}
+			request.getRequestDispatcher("/"+viewsPath+"/"+viewName+".jsp").forward(request, response);
+		} catch (ServletException e) {
+			throw new IOException(e);
+		}
+	}
+	
+	private void renderByFreemarker(Map<String,Object> data,String viewName,HttpServletResponse response) throws IOException {
 		Configuration cfg = new Configuration();  
 		cfg.setDirectoryForTemplateLoading(
 				new File( 

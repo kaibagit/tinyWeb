@@ -1,9 +1,6 @@
 package com.sample.controllers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.sample.models.Member;
 import com.tinyweb.Repertory;
@@ -13,16 +10,7 @@ public class Member_Controller extends Controller{
 	
 	public void index(){
 		List<Member> members = Repertory.all(Member.class);
-		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-		for(Member m:members){
-			Map<String,Object> cell = new HashMap<String,Object>();
-			cell.put("id", m.id);
-			cell.put("name", m.name);
-			cell.put("age", m.age);
-			list.add(cell);
-		}
-		
-		addAttr("members", list);
+		addAttr("members", members);
 		renderHtml();
 	}
 	
@@ -40,9 +28,7 @@ public class Member_Controller extends Controller{
 	
 	public void edit(){
 		Member member = Member.find(paramToLong("id"));
-		addAttr("id", member.id);
-		addAttr("name", member.name);
-		addAttr("age", member.age);
+		addAttr("member", member);
 	}
 	
 	public void update(){
