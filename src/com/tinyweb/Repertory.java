@@ -36,6 +36,21 @@ public class Repertory {
 	}
 	
 	/**
+	 * 根据主键获取对象，如果不存在，则抛出异常
+	 * @param clazz
+	 * @param id
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T fetch(Class<T> clazz,Serializable id){
+		T t = (T) db().get(clazz, id);
+		if(t == null){
+			throw new RuntimeException(clazz+" Serializable="+id+" not existed");
+		}
+		return t;
+	}
+	
+	/**
 	 * 获取所有对象
 	 * @param clazz
 	 * @return

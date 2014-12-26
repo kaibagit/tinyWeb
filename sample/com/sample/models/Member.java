@@ -41,6 +41,10 @@ public class Member extends Model{
 		return Repertory.find(Member.class, id);
 	}
 	
+	public static Member fetch(Long id){
+		return Repertory.fetch(Member.class, id);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static List<Member> findActive(){
 		Query query = Repertory.db().createQuery("from Member where active=true");
