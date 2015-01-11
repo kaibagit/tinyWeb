@@ -1,6 +1,5 @@
 package com.sample.models;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -14,6 +13,8 @@ import org.hibernate.Query;
 
 import com.tinyweb.Model;
 import com.tinyweb.Repertory;
+import com.tinyweb.exception.ValidateException;
+import com.tinyweb.utils.StringUtils;
 
 @Entity
 @Table(name="members")
@@ -24,17 +25,27 @@ public class Member extends Model{
 	public Long id;
 	public String name;
 	public Integer age;
-	public Date createAt;
-	public Date updateAt;
 	private Boolean active;
 	@OneToMany(cascade=CascadeType.ALL,mappedBy="author")
 	public List<Article> articles;
 	
 	public Member(){
-		Date now = new Date();
-		createAt = now;
-		updateAt = now;
 		active = true;
+	}
+	
+	public void validate(){
+		if(StringUtils.isBlank(name)){
+			throw new ValidateException("name can't be empty");
+		}
+		if(age == null){
+			throw new ValidateException("age can't be empty");
+		}
+		if(age<1){
+			throw new ValidateException("age must be greater than 0");
+		}
+		if(age < 150){
+			throw new ValidateException("age must be less than 150");
+		}
 	}
 	
 	public static Member find(Long id){

@@ -9,7 +9,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.tinyweb.Model;
-import com.tinyweb.Repertory;
+import com.tinyweb.exception.ValidateException;
+import com.tinyweb.utils.StringUtils;
 
 @Entity
 @Table(name="articles")
@@ -25,10 +26,13 @@ public class Article extends Model{
 	@ManyToOne
 	public Member author;
 	
-	public Article(){
-		Date now = new Date();
-		createAt = now;
-		updateAt = now;
+	public void validate(){
+		if(StringUtils.isBlank(title)){
+			throw new ValidateException("title can't be empty");
+		}
+		if(StringUtils.isBlank(content)){
+			throw new ValidateException("content can't be empty");
+		}
 	}
 	
 }
