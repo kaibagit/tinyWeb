@@ -1,0 +1,6 @@
+rootProject.name = 'tinyWeb'
+include 'tiny-core'
+include 'tiny-sample'
+include 'tiny-core'
+include 'tiny-sample'
+

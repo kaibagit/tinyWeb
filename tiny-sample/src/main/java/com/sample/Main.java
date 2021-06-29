@@ -1,7 +1,8 @@
+package com.sample;
+
 import com.sample.models.Article;
 import com.sample.models.Member;
 import com.tinyweb.Repertory;
-
 
 
 public class Main {
@@ -10,10 +11,12 @@ public class Main {
 		
 		Member m = new Member();
 		m.name = "luliru";
+		m.age = 20;
 		m.save();
 		
 		Article article = new Article();
 		article.title = "国庆放假7天";
+		article.content = "啦啦啦啦啦";
 		
 		m.publish(article);
 		

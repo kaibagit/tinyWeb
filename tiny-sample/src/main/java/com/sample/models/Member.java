@@ -43,7 +43,7 @@ public class Member extends Model{
 		if(age<1){
 			throw new ValidateException("age must be greater than 0");
 		}
-		if(age < 150){
+		if(age > 150){
 			throw new ValidateException("age must be less than 150");
 		}
 	}
