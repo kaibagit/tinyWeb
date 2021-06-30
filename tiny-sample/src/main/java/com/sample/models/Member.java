@@ -26,6 +26,7 @@ public class Member extends Model{
 	public String name;
 	public Integer age;
 	private Boolean active;
+	public String password_sign;
 	@OneToMany(cascade=CascadeType.ALL,mappedBy="author")
 	public List<Article> articles;
 	
@@ -51,6 +52,12 @@ public class Member extends Model{
 	public static Member find(Long id){
 		return Repertory.find(Member.class, id);
 	}
+
+	public static Member findByName(String name) {
+//		Query query = Repertory.db().createQuery("from Member where name=?");
+//		query.setString()
+		return null;
+	}
 	
 	public static Member fetch(Long id){
 		return Repertory.fetch(Member.class, id);
@@ -71,18 +78,18 @@ public class Member extends Model{
 		if(this.id.equals(article.author.id)){
 			article.destroy();
 		}else{
-			throw new RuntimeException("Only the author can delete the article.");
+			throw new SecurityException("Only the author can delete the article.");
 		}
 	}
-	
+
 	public void activate(){
 		active = true;
 	}
-	
+
 	public void deactivate(){
 		active = false;
 	}
-	
+
 	public boolean isActive(){
 		return active;
 	}
