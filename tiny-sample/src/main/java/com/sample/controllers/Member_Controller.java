@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.sample.models.Member;
 import com.sample.service.SigninService;
-import com.tinyweb.Repertory;
+import com.tinyweb.persistent.hibernate.Repertory;
 import com.tinyweb.error.Result;
 import com.tinyweb.mvc.Controller;
 

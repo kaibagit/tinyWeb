@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.tinyweb.Model;
+import com.tinyweb.persistent.hibernate.Model;
 import com.tinyweb.exception.ValidateException;
 import com.tinyweb.utils.StringUtils;
 

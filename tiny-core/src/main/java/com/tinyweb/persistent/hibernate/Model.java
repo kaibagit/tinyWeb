@@ -1,4 +1,4 @@
-package com.tinyweb;
+package com.tinyweb.persistent.hibernate;
 
 import java.util.Date;
 

@@ -11,8 +11,8 @@ import javax.persistence.Table;
 
 import org.hibernate.Query;
 
-import com.tinyweb.Model;
-import com.tinyweb.Repertory;
+import com.tinyweb.persistent.hibernate.Model;
+import com.tinyweb.persistent.hibernate.Repertory;
 import com.tinyweb.exception.ValidateException;
 import com.tinyweb.utils.StringUtils;
 

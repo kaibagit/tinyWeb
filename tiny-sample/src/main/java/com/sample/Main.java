@@ -2,7 +2,7 @@ package com.sample;
 
 import com.sample.models.Article;
 import com.sample.models.Member;
-import com.tinyweb.Repertory;
+import com.tinyweb.persistent.hibernate.Repertory;
 
 
 public class Main {
