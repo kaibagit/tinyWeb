@@ -35,7 +35,7 @@ public class Dispatcher extends GenericServlet{
 	
 	private ServletConfig config;
 	
-	public void init(ServletConfig config) throws ServletException{
+	public void init(ServletConfig config) throws ServletException {
 		//创建Controller并与url对应
 			//找出所有class
 			//找出所有继承自Controller类的java类
@@ -64,11 +64,11 @@ public class Dispatcher extends GenericServlet{
 			 try {
 				Class<?> clazz = this.getClass().getClassLoader().loadClass(className);
 				if( Controller.class.isAssignableFrom(clazz) ){
-					String controllerUrlPath = clazz.getName().replaceAll(scanPackage, "").toLowerCase().replaceFirst("\\.", "");
-					if(controllerUrlPath.endsWith("_controller")){
-						controllerUrlPath = controllerUrlPath.replaceAll("_controller", "");
+					String controllerUrlPath = clazz.getName().replaceAll(scanPackage, "").replaceFirst("\\.", "");
+					if(controllerUrlPath.endsWith("Controller")){
+						controllerUrlPath = controllerUrlPath.replaceAll("Controller", "");
 					}else{
-						controllerUrlPath.replace("controller", "");
+						controllerUrlPath.replace("Controller", "");
 					}
 					
 					Method[] methodArr = clazz.getMethods();

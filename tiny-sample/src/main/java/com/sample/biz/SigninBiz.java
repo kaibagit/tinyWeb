@@ -1,4 +1,4 @@
-package com.sample.service;
+package com.sample.biz;
 
 import com.sample.models.Member;
 import com.tinyweb.error.Result;
@@ -6,10 +6,10 @@ import com.tinyweb.error.Result;
 import java.util.Objects;
 
 /**
- * SigninService
+ * SigninBiz
  * Created by luliru on 6/30/21.
  */
-public class SigninService {
+public class SigninBiz {
 
     public static Result<Member> signin(String name, String password_sign) {
         Member member = Member.findByName(name);

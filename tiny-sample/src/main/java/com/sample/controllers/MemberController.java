@@ -2,13 +2,13 @@ package com.sample.controllers;
 
 import java.util.List;
 
+import com.sample.biz.SigninBiz;
 import com.sample.models.Member;
-import com.sample.service.SigninService;
 import com.tinyweb.persistent.hibernate.Repertory;
 import com.tinyweb.error.Result;
 import com.tinyweb.mvc.Controller;
 
-public class Member_Controller extends Controller{
+public class MemberController extends Controller {
 	
 	public void index(){
 		List<Member> members = Repertory.all(Member.class);
@@ -59,7 +59,7 @@ public class Member_Controller extends Controller{
 		String name = param("name");
 		String password_sign = param("password_sign");
 
-		Result<Member> result = SigninService.signin(name, password_sign);
+		Result<Member> result = SigninBiz.signin(name, password_sign);
 		result.except("wrong-password", e -> {
 			redirectTo("signin");
 		}).success(member -> {
